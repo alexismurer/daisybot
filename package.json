@@ -1,0 +1,33 @@
+{
+  "name": "discord-langchain",
+  "version": "1.0.0",
+  "description": "Conversational AI Discord bot with LangGraph memory",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "register": "ts-node src/bot/register.ts"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/core": "^1.1.33",
+    "@langchain/google-genai": "^2.1.26",
+    "@langchain/groq": "^1.1.5",
+    "@langchain/langgraph": "^0.2.0",
+    "@langchain/openai": "^0.3.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "discord.js": "^14.16.0",
+    "dotenv": "^17.3.1",
+    "langchain": "^0.3.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}
