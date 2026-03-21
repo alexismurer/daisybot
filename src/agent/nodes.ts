@@ -114,7 +114,10 @@ export async function callLLMNode(state: AgentState): Promise<Partial<AgentState
     imageBuffer = result ?? undefined;
   }
 
-  return { response, imageBuffer };
+  // When an image was successfully generated, don't send the text description — just the image.
+  const finalResponse = imageBuffer ? '' : response;
+
+  return { response: finalResponse, imageBuffer };
 }
 
 export async function saveMemoryNode(state: AgentState): Promise<Partial<AgentState>> {
