@@ -114,8 +114,18 @@ export async function callLLMNode(state: AgentState): Promise<Partial<AgentState
     imageBuffer = result ?? undefined;
   }
 
-  // When an image was successfully generated, don't send the text description — just the image.
-  const finalResponse = imageBuffer ? '' : response;
+  // When an image was successfully generated, replace the description with a short natural phrase.
+  const imagePhrases = [
+    'here you go 😊',
+    'there you go~',
+    'here it is!',
+    'just for you 💕',
+    'ta-da!',
+    'here~',
+  ];
+  const finalResponse = imageBuffer
+    ? imagePhrases[Math.floor(Math.random() * imagePhrases.length)]
+    : response;
 
   return { response: finalResponse, imageBuffer };
 }
