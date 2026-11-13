@@ -11,8 +11,8 @@ const envSchema = z.object({
   DISCORD_CLIENT_ID: z.string().min(1),
   SUPABASE_URL: z.string().url(),
   SUPABASE_ANON_KEY: z.string().min(1),
-  MODEL_PROVIDER: z.enum(['google', 'openai', 'anthropic', 'groq']).default('google'),
-  MODEL_NAME: z.string().default('gemini-2.0-flash'),
+  MODEL_PROVIDER: z.enum(['google', 'openai', 'anthropic', 'groq']).default('groq'),
+  MODEL_NAME: z.string().default('qwen/qwen3.8-27b'),
   GOOGLE_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   ANTHROPIC_API_KEY: z.string().optional(),
@@ -32,7 +32,12 @@ export function createChatModel(): BaseChatModel {
       return new ChatOpenAI({ model: MODEL_NAME, apiKey: config.OPENAI_API_KEY });
     case 'anthropic':
       return new ChatAnthropic({ model: MODEL_NAME, apiKey: config.ANTHROPIC_API_KEY });
-    case 'groq':
-      return new ChatGroq({ model: MODEL_NAME, apiKey: config.GROQ_API_KEY });
+    case 'groq': {
+      // reasoning models would otherwise put their thinking into the reply text
+      const model = new ChatGroq({ model: MODEL_NAME, apiKey: config.GROQ_API_KEY, reasoningEffort: 'none' });
+      // ChatGroq sends this field but its constructor does not accept it
+      model.reasoningFormat = 'hidden';
+      return model;
+    }
   }
 }

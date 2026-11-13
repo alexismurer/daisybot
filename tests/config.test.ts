@@ -70,6 +70,23 @@ describe('createChatModel — provider switching', () => {
     expect(() => createChatModel()).not.toThrow();
   });
 
+  it('defaults to Groq with qwen/qwen3.8-27b', async () => {
+    setEnv();
+    delete process.env.MODEL_PROVIDER;
+    delete process.env.MODEL_NAME;
+    const { config } = await import('../src/config');
+    expect(config.MODEL_PROVIDER).toBe('groq');
+    expect(config.MODEL_NAME).toBe('qwen/qwen3.8-27b');
+  });
+
+  it('keeps Groq reasoning out of replies', async () => {
+    setEnv({ MODEL_PROVIDER: 'groq', MODEL_NAME: 'qwen/qwen3.8-27b', GROQ_API_KEY: 'key' });
+    const { createChatModel } = await import('../src/config');
+    const model = createChatModel() as unknown as { reasoningEffort: string; reasoningFormat: string };
+    expect(model.reasoningEffort).toBe('none');
+    expect(model.reasoningFormat).toBe('hidden');
+  });
+
   it('returns a model for groq provider', async () => {
     setEnv({ MODEL_PROVIDER: 'groq', MODEL_NAME: 'llama3-8b-8192', GROQ_API_KEY: 'key' });
     const { createChatModel } = await import('../src/config');
